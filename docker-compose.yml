@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    command: uvicorn api:app --host 0.0.0.0 --port 5000
+    volumes:
+      - .:/app
+    ports:
+      - "8080:5000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  worker:
+      build: .
+      # 加入 --concurrency=1，這會讓 CPU 專心算一張圖，速度會快很多
+      command: celery -A worker.celery_app worker --loglevel=info --concurrency=1
+      volumes:
+        - .:/app
+      environment:
+        - CELERY_BROKER_URL=redis://redis:6379/0
+      depends_on:
+        - redis

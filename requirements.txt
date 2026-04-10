@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+celery
+redis
+torch -i https://pypi.tuna.tsinghua.edu.cn/simple
+torchvision -i https://pypi.tuna.tsinghua.edu.cn/simple
+segmentation-models-pytorch
+opencv-python-headless
+pillow
+numpy
